@@ -136,6 +136,14 @@ function clearToDoList() {
   while (todoList.firstChild) {
     todoList.removeChild(todoList.firstChild);
   }
+
+  // Clear from LS 
+  clearListFromLocalStorage();
+}
+
+// Clear LS 
+function clearListFromLocalStorage() {
+  localStorage.clear();
 }
 
 // Filter List 
