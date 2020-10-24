@@ -10,6 +10,8 @@ loadEventListeners();
 
 // Load all event listeners 
 function loadEventListeners() {
+  // DOM LOAD Event 
+  document.addEventListener('DOMContentLoaded', getToDos);
   // Add To do event 
   form.addEventListener('submit', addTodo);
   // Remove todo event 
@@ -18,6 +20,37 @@ function loadEventListeners() {
   clearBtn.addEventListener('click', clearToDoList);
   // Filter To do list event 
   filter.addEventListener('keyup', filterList);
+}
+
+// Get to do list from LS to display
+function getToDos() {
+  let todos;
+  if (localStorage.getItem('todos') === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem('todos'));
+  }
+
+  todos.forEach(function (todo) {
+    // Create li element 
+    const li = document.createElement('li');
+    // Add Class 
+    li.className = 'list-group-item';
+    // Create textnode and append to the li 
+    li.appendChild(document.createTextNode(todo));
+    // Create new link element 
+    const link = document.createElement('a');
+    // Add class 
+    link.className = 'delete-item'
+    // Add icon html 
+    link.innerHTML = '<i class="fa fa-remove"></i>'
+    // Append the link to the li 
+    li.appendChild(link);
+
+    // Append the li to the ul 
+    todoList.appendChild(li);
+
+  });
 }
 
 // Add To Do 
@@ -44,10 +77,27 @@ function addTodo(e) {
   // Append the li to the ul 
   todoList.appendChild(li);
 
+  // Store in LS 
+  storeInLocalStorage(todoInput.value);
+
   // Clear input 
   todoInput.value = '';
 
   e.preventDefault();
+}
+
+// store in LS 
+function storeInLocalStorage(todo) {
+  let todos;
+  if (localStorage.getItem('todos') === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem('todos'));
+  }
+
+  todos.push(todo);
+
+  localStorage.setItem('todos', JSON.stringify(todos));
 }
 
 // Remove To Do 
@@ -56,8 +106,29 @@ function removeToDo(e) {
     console.log(e.target);
     if (confirm('Are You Sure?')) {
       e.target.parentElement.parentElement.remove();
+
+      // Remove from LS 
+      removeFromLocalStorage(e.target.parentElement.parentElement);
     }
   }
+}
+
+// Remove from LS 
+function removeFromLocalStorage(todoItem) {
+  let todos;
+  if (localStorage.getItem('todos') === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem('todos'));
+  }
+
+  todos.forEach(function (todo, index) {
+    if (todoItem.textContent === todo) {
+      todos.splice(index, 1);
+    }
+  });
+
+  localStorage.setItem('todos', JSON.stringify(todos));
 }
 
 // Clear To Do List 
