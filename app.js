@@ -12,6 +12,10 @@ loadEventListeners();
 function loadEventListeners() {
   // Add To do event 
   form.addEventListener('submit', addTodo);
+  // Remove todo event 
+  todoList.addEventListener('click', removeToDo);
+  // Clear list event 
+  clearBtn.addEventListener('click', clearToDoList);
 }
 
 // Add To Do 
@@ -42,4 +46,22 @@ function addTodo(e) {
   todoInput.value = '';
 
   e.preventDefault();
+}
+
+// Remove To Do 
+function removeToDo(e) {
+  if (e.target.parentElement.classList.contains('delete-item')) {
+    console.log(e.target);
+    if (confirm('Are You Sure?')) {
+      e.target.parentElement.parentElement.remove();
+    }
+  }
+}
+
+// Clear To Do List 
+function clearToDoList() {
+  // todoList.innerHTML = '';
+  while (todoList.firstChild) {
+    todoList.removeChild(todoList.firstChild);
+  }
 }
